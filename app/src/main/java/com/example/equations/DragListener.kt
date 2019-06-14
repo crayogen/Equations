@@ -6,8 +6,7 @@ import android.view.View
 
 class DragListener(
     private val isValid: (Item) -> Boolean,
-    private val populateTargetView: (Item) -> Unit,
-    private val onDropComplete: () -> Unit
+    private val populateTargetView: (Item) -> Unit
 ) : View.OnDragListener {
 
     override fun onDrag(targetView: View, event: DragEvent): Boolean {
@@ -23,7 +22,6 @@ class DragListener(
                 if (!isValid(item)) return false
                 dragData.clearTile()
                 populateTargetView(item)
-                onDropComplete()
             }
         }
         return true
