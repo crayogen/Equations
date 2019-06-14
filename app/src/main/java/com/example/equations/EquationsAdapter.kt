@@ -24,6 +24,7 @@ class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<E
         if (item == null) {
             holder.tileText.tag = null
             holder.tileText.setOnTouchListener(null)
+            holder.tileText.setOnDragListener(DragListener({ _ -> true }, { item -> set(position, item) }))
         } else {
             holder.tileText.tag = DragData(item, { set(position, null )})
             holder.tileText.setOnTouchListener(TileTouchListener())
