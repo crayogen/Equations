@@ -1,15 +1,13 @@
 package com.example.equations
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-
+import com.example.equations.Item.Number
 
 class FullscreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +18,20 @@ class FullscreenActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.HORIZONTAL))
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
         recycler_view.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = EquationsAdapter(listOf('a', 'b', 'c', 'd', 'e', 'f'))
+        recycler_view.adapter = EquationsAdapter(arrayOf(
+            Number(1),
+            Number(2),
+            Item.Operator.Multiply,
+            Number(7),
+            Number(9),
+            Item.Operator.Plus,
+            Number(3),
+            Number(6)
+        )
+        )
+        first_number.setOnDragListener(DragListener {item -> item is Number})
+        second_number.setOnDragListener(DragListener {item -> item is Number})
+        operator.setOnDragListener(DragListener {item -> item is Item.Operator})
     }
 
     private fun makeFullScreen() {
