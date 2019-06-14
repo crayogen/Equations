@@ -29,9 +29,27 @@ class FullscreenActivity : AppCompatActivity() {
             Number(6)
         )
         )
-        first_number.setOnDragListener(DragListener {item -> item is Number})
-        second_number.setOnDragListener(DragListener {item -> item is Number})
-        operator.setOnDragListener(DragListener {item -> item is Item.Operator})
+        first_number.setOnDragListener(DragListener(
+            {item -> item is Number},
+            { item ->
+                first_number.text = item.toString()
+                first_number.setOnTouchListener(TileTouchListener())
+            }
+        ))
+        second_number.setOnDragListener(DragListener(
+            {item -> item is Number},
+            { item ->
+                second_number.text = item.toString()
+                second_number.setOnTouchListener(TileTouchListener())
+            }
+        ))
+        operator.setOnDragListener(DragListener(
+            {item -> item is Item.Operator},
+            { item ->
+                operator.text = item.toString()
+                operator.setOnTouchListener(TileTouchListener())
+            }
+        ))
     }
 
     private fun makeFullScreen() {

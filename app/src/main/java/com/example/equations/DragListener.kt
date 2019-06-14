@@ -5,7 +5,7 @@ import android.view.DragEvent
 import android.view.View
 import android.widget.TextView
 
-class DragListener(private val isValid: (Item) -> Boolean) : View.OnDragListener {
+class DragListener(private val isValid: (Item) -> Boolean, private val populateTargetView: (Item) -> Unit) : View.OnDragListener {
     override fun onDrag(targetView: View, event: DragEvent): Boolean {
         val dragData = event.localState as DragData
         val item = dragData.item
@@ -22,7 +22,7 @@ class DragListener(private val isValid: (Item) -> Boolean) : View.OnDragListener
                     dragData.populateTile()
                     return false
                 }
-                (targetView as TextView).text = item.toString()
+                populateTargetView(item)
             }
         }
         return true
