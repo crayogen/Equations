@@ -6,39 +6,32 @@ sealed class Item {
     }
 
     sealed class Operator : Item() {
-        fun operate(number1: Number, number2: Number) = Item.Number(
-            compute(number1, number2),
+        fun operate(number1: Number, number2: Number) = Number(
+            compute(number1.number, number2.number),
             Equation(number1, number2, this)
         )
 
-        protected abstract fun compute(number1: Number, number2: Number): Int
+        protected abstract fun compute(number1: Int, number2: Int): Int
 
         object Plus : Operator() {
-            override fun compute(number1: Number, number2: Number) =
-                number1.number + number2.number
-
             override fun toString() = "+"
+            override fun compute(number1: Int, number2: Int) = number1 + number2
         }
 
         object Minus : Operator() {
-            override fun compute(number1: Number, number2: Number) =
-                number1.number - number2.number
-
             override fun toString() = "-"
+            override fun compute(number1: Int, number2: Int) = number1 - number2
         }
 
         object Multiply : Operator() {
-            override fun compute(number1: Number, number2: Number) =
-                number1.number * number2.number
-
             override fun toString() = "x"
+            override fun compute(number1: Int, number2: Int) = number1 * number2
         }
 
         object Power : Operator() {
-            override fun compute(number1: Number, number2: Number) =
-                Math.pow(number1.number.toDouble(), number2.number.toDouble()).toInt()
-
             override fun toString() = "^"
+            override fun compute(number1: Int, number2: Int) =
+                Math.pow(number1.toDouble(), number2.toDouble()).toInt()
         }
     }
 }
