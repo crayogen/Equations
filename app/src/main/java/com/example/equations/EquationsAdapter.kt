@@ -21,18 +21,17 @@ class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<E
         val item = items[position]
         @Suppress("IfThenToElvis")
         holder.tileText.text = if (item == null) "" else item.toString()
-        holder.tileText.tag = item
-        holder.tileText.setOnTouchListener(
-            if (item == null) {
-                null
-            } else {
-                TileTouchListener(
-                    item,
-                    { set(position, null )},
-                    { set(position, item )}
-                )
-            }
-        )
+        if (item == null) {
+            holder.tileText.tag = null
+            holder.tileText.setOnTouchListener(null)
+        } else {
+            holder.tileText.tag = DragData(
+                item,
+                { set(position, null )},
+                { set(position, item )}
+            )
+            holder.tileText.setOnTouchListener(TileTouchListener())
+        }
     }
 
     operator fun get(index: Int) = items[index]
