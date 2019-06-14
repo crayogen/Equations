@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.example.equations.Item.Number
 
 class FullscreenActivity : AppCompatActivity() {
     @Suppress("MoveLambdaOutsideParentheses")
@@ -22,35 +21,55 @@ class FullscreenActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
         recycler_view.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
         recycler_view.adapter = EquationsAdapter(arrayOf(
-            Number(1),
-            Number(2),
+            Item.Number(1),
+            Item.Number(2),
             Item.Operator.Multiply,
-            Number(7),
-            Number(9),
+            Item.Number(7),
+            Item.Number(9),
             Item.Operator.Plus,
-            Number(3),
-            Number(6)
+            Item.Number(3),
+            Item.Number(6)
         ))
-        setDragListener(first_number_view, { item -> item is Number})
-        setDragListener(second_number_view, { item -> item is Number})
+        setDragListener(first_number_view, { item -> item is Item.Number})
+        setDragListener(second_number_view, { item -> item is Item.Number})
         setDragListener(operator_view, { item -> item is Item.Operator })
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun clearText(view: TextView, isValid: (Item) -> Boolean) {
+    private fun clearText(view: TextView) {
         view.text = ""
         view.tag = null
         view.setOnTouchListener(null)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun clearTextAndSetDragListener(view: TextView, isValid: (Item) -> Boolean) {
+        clearText(view)
         setDragListener(view, isValid)
     }
 
+    @Suppress("MoveLambdaOutsideParentheses")
+    private fun clearResult() {
+        clearText(result_view)
+        clearTextAndSetDragListener(first_number_view, { item -> item is Item.Number})
+        clearTextAndSetDragListener(second_number_view, { item -> item is Item.Number})
+        clearTextAndSetDragListener(operator_view, { item -> item is Item.Operator})
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     @Suppress("MoveLambdaOutsideParentheses")
     private fun setDragListener(view: TextView, isValid: (Item) -> Boolean) {
         view.setOnDragListener(DragListener(
             isValid,
             { item ->
                 view.text = item.toString()
-                view.tag = DragData(item, { clearText(view, isValid) })
+                view.tag = DragData(
+                    item,
+                    {
+                        clearTextAndSetDragListener(view, isValid)
+                        clearResult()
+                    }
+                )
                 view.setOnTouchListener(TileTouchListener())
                 view.setOnDragListener(null)
             },
@@ -60,15 +79,14 @@ class FullscreenActivity : AppCompatActivity() {
 
     @Suppress("MoveLambdaOutsideParentheses")
     private fun onEquationDropComplete() {
-        val firstNumber = (first_number_view.tag as DragData?)?.item as Number?
-        val secondNumber = (second_number_view.tag as DragData?)?.item as Number?
+        val firstNumber = (first_number_view.tag as DragData?)?.item as Item.Number?
+        val secondNumber = (second_number_view.tag as DragData?)?.item as Item.Number?
         val operator = (operator_view.tag as DragData?)?.item as Item.Operator?
         if (firstNumber != null && secondNumber != null && operator != null) {
             val result = operator.compute(firstNumber, secondNumber)
             result_view.text = result.toString()
-            clearText(first_number_view, { item -> item is Number})
-            clearText(second_number_view, { item -> item is Number})
-            clearText(operator_view, { item -> item is Item.Operator})
+            result_view.tag = DragData(result, { clearResult() })
+            result_view.setOnTouchListener(TileTouchListener())
         }
     }
 
