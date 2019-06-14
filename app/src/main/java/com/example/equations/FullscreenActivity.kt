@@ -2,6 +2,7 @@ package com.example.equations
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.equations.Item.Number
 
 class FullscreenActivity : AppCompatActivity() {
+    @Suppress("MoveLambdaOutsideParentheses")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,30 +29,27 @@ class FullscreenActivity : AppCompatActivity() {
             Item.Operator.Plus,
             Number(3),
             Number(6)
-        )
-        )
-        first_number.setOnDragListener(DragListener(
-            {item -> item is Number},
-            { item ->
-                first_number.text = item.toString()
-                first_number.tag = DragData(item, { first_number.text = "" })
-                first_number.setOnTouchListener(TileTouchListener())
-            }
         ))
-        second_number.setOnDragListener(DragListener(
-            {item -> item is Number},
+        setDragListener(first_number, {item -> item is Number})
+        setDragListener(second_number, {item -> item is Number})
+        setDragListener(operator, {item -> item is Item.Operator })
+    }
+
+    @Suppress("MoveLambdaOutsideParentheses")
+    fun setDragListener(view: TextView, isValid: (Item) -> Boolean) {
+        view.setOnDragListener(DragListener(
+            isValid,
             { item ->
-                second_number.text = item.toString()
-                second_number.tag = DragData(item, { second_number.text = "" })
-                second_number.setOnTouchListener(TileTouchListener())
-            }
-        ))
-        operator.setOnDragListener(DragListener(
-            {item -> item is Item.Operator},
-            { item ->
-                operator.text = item.toString()
-                operator.tag = DragData(item, { operator.text = "" })
-                operator.setOnTouchListener(TileTouchListener())
+                view.text = item.toString()
+                view.tag = DragData(
+                    item,
+                    {
+                        view.text = ""
+                        setDragListener(view, isValid)
+                    }
+                )
+                view.setOnTouchListener(TileTouchListener())
+                view.setOnDragListener(null)
             }
         ))
     }
