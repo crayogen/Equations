@@ -17,13 +17,11 @@ class DragListener(private val isValid: (Item) -> Boolean) : View.OnDragListener
                 targetView.setBackgroundColor(Color.BLACK)
             DragEvent.ACTION_DROP -> {
                 targetView.setBackgroundColor(Color.BLACK)
-                if (!isValid(item)) return false
-                (targetView as TextView).text = item.toString()
-            }
-            DragEvent.ACTION_DRAG_ENDED -> {
-                if (!event.result) {
+                if (!isValid(item)) {
                     dragData.populateTile()
+                    return false
                 }
+                (targetView as TextView).text = item.toString()
             }
         }
         return true
