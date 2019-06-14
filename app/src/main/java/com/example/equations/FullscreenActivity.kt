@@ -33,6 +33,7 @@ class FullscreenActivity : AppCompatActivity() {
             {item -> item is Number},
             { item ->
                 first_number.text = item.toString()
+                first_number.tag = DragData(item, { first_number.text = "" }, { first_number.text = item.toString() })
                 first_number.setOnTouchListener(TileTouchListener())
             }
         ))
@@ -40,6 +41,7 @@ class FullscreenActivity : AppCompatActivity() {
             {item -> item is Number},
             { item ->
                 second_number.text = item.toString()
+                second_number.tag = DragData(item, { second_number.text = "" }, { second_number.text = item.toString() })
                 second_number.setOnTouchListener(TileTouchListener())
             }
         ))
@@ -47,6 +49,7 @@ class FullscreenActivity : AppCompatActivity() {
             {item -> item is Item.Operator},
             { item ->
                 operator.text = item.toString()
+                operator.tag = DragData(item, { operator.text = "" }, { operator.text = item.toString() })
                 operator.setOnTouchListener(TileTouchListener())
             }
         ))
