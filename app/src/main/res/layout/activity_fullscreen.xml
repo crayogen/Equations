@@ -29,7 +29,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/first_number"
+                android:id="@+id/first_number_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,1:1"
@@ -52,7 +52,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/operator"
+                android:id="@+id/operator_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,1:1"
@@ -75,7 +75,7 @@
             android:layout_weight="1">
 
             <TextView
-                    android:id="@+id/second_number"
+                    android:id="@+id/second_number_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="H,1:1"
@@ -107,7 +107,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/result"
+                android:id="@+id/result_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,1:1"

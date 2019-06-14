@@ -1,5 +1,6 @@
 package com.example.equations
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -30,28 +31,45 @@ class FullscreenActivity : AppCompatActivity() {
             Number(3),
             Number(6)
         ))
-        setDragListener(first_number, {item -> item is Number})
-        setDragListener(second_number, {item -> item is Number})
-        setDragListener(operator, {item -> item is Item.Operator })
+        setDragListener(first_number_view, { item -> item is Number})
+        setDragListener(second_number_view, { item -> item is Number})
+        setDragListener(operator_view, { item -> item is Item.Operator })
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun clearText(view: TextView, isValid: (Item) -> Boolean) {
+        view.text = ""
+        view.tag = null
+        view.setOnTouchListener(null)
+        setDragListener(view, isValid)
     }
 
     @Suppress("MoveLambdaOutsideParentheses")
-    fun setDragListener(view: TextView, isValid: (Item) -> Boolean) {
+    private fun setDragListener(view: TextView, isValid: (Item) -> Boolean) {
         view.setOnDragListener(DragListener(
             isValid,
             { item ->
                 view.text = item.toString()
-                view.tag = DragData(
-                    item,
-                    {
-                        view.text = ""
-                        setDragListener(view, isValid)
-                    }
-                )
+                view.tag = DragData(item, { clearText(view, isValid) })
                 view.setOnTouchListener(TileTouchListener())
                 view.setOnDragListener(null)
-            }
+            },
+            ::onEquationDropComplete
         ))
+    }
+
+    @Suppress("MoveLambdaOutsideParentheses")
+    private fun onEquationDropComplete() {
+        val firstNumber = (first_number_view.tag as DragData?)?.item as Number?
+        val secondNumber = (second_number_view.tag as DragData?)?.item as Number?
+        val operator = (operator_view.tag as DragData?)?.item as Item.Operator?
+        if (firstNumber != null && secondNumber != null && operator != null) {
+            val result = operator.compute(firstNumber, secondNumber)
+            result_view.text = result.toString()
+            clearText(first_number_view, { item -> item is Number})
+            clearText(second_number_view, { item -> item is Number})
+            clearText(operator_view, { item -> item is Item.Operator})
+        }
     }
 
     private fun makeFullScreen() {

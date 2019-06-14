@@ -15,7 +15,7 @@ class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<E
         return EquationsViewHolder(inflater.inflate(R.layout.tile, parent, false))
     }
 
-    @Suppress("MoveLambdaOutsideParentheses")
+    @Suppress("MoveLambdaOutsideParentheses", "NAME_SHADOWING", "RedundantLambdaArrow")
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: EquationsViewHolder, position: Int) {
         val item = items[position]
@@ -24,7 +24,7 @@ class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<E
         if (item == null) {
             holder.tileText.tag = null
             holder.tileText.setOnTouchListener(null)
-            holder.tileText.setOnDragListener(DragListener({ _ -> true }, { item -> set(position, item) }))
+            holder.tileText.setOnDragListener(DragListener({ _ -> true }, { item -> set(position, item) }, {}))
         } else {
             holder.tileText.tag = DragData(item, { set(position, null )})
             holder.tileText.setOnTouchListener(TileTouchListener())
