@@ -4,13 +4,19 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.properties.Delegates.notNull
 
 class FullscreenActivity : AppCompatActivity() {
+    var adapter: EquationsAdapter by notNull()
+    var goal: Int by notNull()
+
     @Suppress("MoveLambdaOutsideParentheses")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,25 +26,46 @@ class FullscreenActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.HORIZONTAL))
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
         recycler_view.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = EquationsAdapter(arrayOf(
+        replay()
+    }
+
+    private fun replay() {
+        generateGameData()
+        recycler_view.adapter = adapter
+        clearTextAndSetDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearTextAndSetDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearTextAndSetDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
+        clearResult()
+        themeTile(first_number_view)
+        themeTile(second_number_view)
+        themeTile(operator_view)
+        themeTile(result_view)
+
+        goal_view.text = HtmlCompat.fromHtml(
+            "Your goal is <font color=#00FF00>$goal</font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+    }
+
+    private fun generateGameData() {
+        goal = 6
+        adapter = EquationsAdapter(arrayOf(
             Item.Number(1),
-            Item.Number(2),
-            Item.Operator.Multiply,
+            Item.Number(2, isNecessary = true),
+            Item.Operator.Multiply(isNecessary = true),
             Item.Number(7),
             Item.Number(9),
-            Item.Operator.Plus,
-            Item.Number(3),
+            Item.Operator.Plus(),
+            Item.Number(3, isNecessary = true),
             Item.Number(6)
         ))
-        setDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
-        setDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
-        setDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun clearText(view: TextView) {
         view.text = ""
         view.tag = null
+        themeTile(view)
         view.setOnTouchListener(null)
         if (first_number_view.tag == null &&
             second_number_view.tag == null &&
@@ -99,6 +126,7 @@ class FullscreenActivity : AppCompatActivity() {
                 clearResult()
             }
         )
+        themeTile(view)
         view.setOnTouchListener(TileTouchListener())
         view.setOnDragListener(null)
         result_view.setOnDragListener(null)
@@ -107,7 +135,7 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun isValidDragForResultView(item: Item) = (item as? Item.Number)?.equation != null
 
-    @Suppress("MoveLambdaOutsideParentheses", "UNUSED_PARAMETER")
+    @Suppress("MoveLambdaOutsideParentheses", "UNUSED_PARAMETER", "NAME_SHADOWING")
     private fun onEquationDropComplete(item: Item) {
         val firstNumber = (first_number_view.tag as DragData?)?.item as Item.Number?
         val secondNumber = (second_number_view.tag as DragData?)?.item as Item.Number?
@@ -122,8 +150,12 @@ class FullscreenActivity : AppCompatActivity() {
                     clearEquation()
                 }
             )
+            themeTile(result_view)
             result_view.setOnTouchListener(TileTouchListener())
             result_view.setOnDragListener(null)
+            if (result.number == goal && adapter.items.none { item -> item?.isNecessary == true }) {
+                win()
+            }
         }
     }
 
@@ -148,6 +180,15 @@ class FullscreenActivity : AppCompatActivity() {
             Item::isOperator,
             ::onEquationDropComplete
         )
+    }
+
+    private fun win() {
+        AlertDialog.Builder(this)
+            .setTitle("Congratulations!")
+            .setMessage("You won!!!!!!")
+            .setNegativeButton("Quit") { _, _ -> finish() }
+            .setPositiveButton("Replay") { _, _ ->  replay()}
+            .show()
     }
 
     private fun makeFullScreen() {

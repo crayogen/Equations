@@ -7,12 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0099cc"
+    android:background="@android:color/white"
     tools:context=".FullscreenActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
+    <TextView
+        android:id="@+id/goal_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="40sp"
+        android:textColor="#888FF7"
+        android:textStyle="bold"
+        tools:text="The goal is 78" />
 
     <LinearLayout
         android:layout_marginTop="20dp"

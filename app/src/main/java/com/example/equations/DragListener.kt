@@ -3,6 +3,7 @@ package com.example.equations
 import android.graphics.Color
 import android.view.DragEvent
 import android.view.View
+import android.widget.TextView
 
 class DragListener(
     private val isValid: (Item) -> Boolean,
@@ -16,10 +17,12 @@ class DragListener(
             DragEvent.ACTION_DRAG_ENTERED ->
                 targetView.setBackgroundColor(if (isValid(item)) Color.GREEN else Color.GRAY)
             DragEvent.ACTION_DRAG_EXITED ->
-                targetView.setBackgroundColor(Color.BLACK)
+                themeTile(targetView as TextView)
             DragEvent.ACTION_DROP -> {
-                targetView.setBackgroundColor(Color.BLACK)
-                if (!isValid(item)) return false
+                if (!isValid(item)) {
+                    themeTile(targetView as TextView)
+                    return false
+                }
                 dragData.clearTile()
                 populateTargetView(item)
             }

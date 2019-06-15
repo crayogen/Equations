@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<EquationsViewHolder>() {
+class EquationsAdapter(val items: Array<Item?>) : RecyclerView.Adapter<EquationsViewHolder>() {
     override fun getItemCount() = items.size
 
     @SuppressLint("ClickableViewAccessibility")
@@ -29,6 +29,7 @@ class EquationsAdapter(private val items: Array<Item?>) : RecyclerView.Adapter<E
             holder.tileText.setOnTouchListener(TileTouchListener())
             holder.tileText.setOnDragListener(null)
         }
+        themeTile(holder.tileText)
     }
 
     operator fun get(index: Int) = items[index]
