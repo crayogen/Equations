@@ -36,26 +36,37 @@ class FullscreenActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun clearText(
+    private fun clearText(view: TextView) {
+        view.text = ""
+        view.tag = null
+        view.setOnTouchListener(null)
+        if (first_number_view.tag == null &&
+            second_number_view.tag == null &&
+            operator_view.tag == null &&
+            result_view.tag == null
+        ) {
+            setDragListener(result_view, ::isValidDragForResultView, ::onResultDropComplete)
+        }
+    }
+
+    private fun clearTextAndSetDragListener(
         view: TextView,
         isValid: (Item) -> Boolean,
         onDropComplete: (Item) -> Unit
     ) {
-        view.text = ""
-        view.tag = null
-        view.setOnTouchListener(null)
+        clearText(view)
         setDragListener(view, isValid, onDropComplete)
     }
 
     @Suppress("MoveLambdaOutsideParentheses")
     private fun clearResult() {
-        clearText(result_view, ::isValidDragForResultView, ::onResultDropComplete)
+        clearText(result_view)
     }
 
     private fun clearEquation() {
-        clearText(first_number_view, Item::isNumber, ::onEquationDropComplete)
-        clearText(second_number_view, Item::isNumber, ::onEquationDropComplete)
-        clearText(operator_view, Item::isOperator, ::onEquationDropComplete)
+        clearTextAndSetDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearTextAndSetDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearTextAndSetDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
     }
 
     @Suppress("MoveLambdaOutsideParentheses")
@@ -82,12 +93,15 @@ class FullscreenActivity : AppCompatActivity() {
         view.tag = DragData(
             item,
             {
-                clearText(view, isValid, onDropComplete)
+                if (view != result_view) {
+                    clearTextAndSetDragListener(view, isValid, onDropComplete)
+                }
                 clearResult()
             }
         )
         view.setOnTouchListener(TileTouchListener())
         view.setOnDragListener(null)
+        result_view.setOnDragListener(null)
         onDropComplete(item)
     }
 
