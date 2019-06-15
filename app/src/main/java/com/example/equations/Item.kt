@@ -1,6 +1,9 @@
 package com.example.equations
 
 sealed class Item {
+    fun isNumber() = this is Number
+    fun isOperator() = this is Operator
+
     class Number(val number: Int, val equation: Equation? = null) : Item() {
         override fun toString() = number.toString()
     }

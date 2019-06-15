@@ -30,9 +30,9 @@ class FullscreenActivity : AppCompatActivity() {
             Item.Number(3),
             Item.Number(6)
         ))
-        setDragListener(first_number_view, { item -> item is Item.Number}, ::onEquationDropComplete)
-        setDragListener(second_number_view, { item -> item is Item.Number}, ::onEquationDropComplete)
-        setDragListener(operator_view, { item -> item is Item.Operator }, ::onEquationDropComplete)
+        setDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
+        setDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
+        setDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,13 +49,13 @@ class FullscreenActivity : AppCompatActivity() {
 
     @Suppress("MoveLambdaOutsideParentheses")
     private fun clearResult() {
-        clearText(result_view, { item -> (item as? Item.Number)?.equation != null }, ::onResultDropComplete)
+        clearText(result_view, ::isValidDragForResultView, ::onResultDropComplete)
     }
 
     private fun clearEquation() {
-        clearText(first_number_view, { item -> item is Item.Number}, ::onEquationDropComplete)
-        clearText(second_number_view, { item -> item is Item.Number}, ::onEquationDropComplete)
-        clearText(operator_view, { item -> item is Item.Operator}, ::onEquationDropComplete)
+        clearText(first_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearText(second_number_view, Item::isNumber, ::onEquationDropComplete)
+        clearText(operator_view, Item::isOperator, ::onEquationDropComplete)
     }
 
     @Suppress("MoveLambdaOutsideParentheses")
@@ -91,6 +91,8 @@ class FullscreenActivity : AppCompatActivity() {
         onDropComplete(item)
     }
 
+    private fun isValidDragForResultView(item: Item) = (item as? Item.Number)?.equation != null
+
     @Suppress("MoveLambdaOutsideParentheses", "UNUSED_PARAMETER")
     private fun onEquationDropComplete(item: Item) {
         val firstNumber = (first_number_view.tag as DragData?)?.item as Item.Number?
@@ -117,19 +119,19 @@ class FullscreenActivity : AppCompatActivity() {
         populateTile(
             first_number_view,
             equation.firstNumber,
-            { item -> item is Item.Number},
+            Item::isNumber,
             ::onEquationDropComplete
         )
         populateTile(
             second_number_view,
             equation.secondNumber,
-            { item -> item is Item.Number},
+            Item::isNumber,
             ::onEquationDropComplete
         )
         populateTile(
             operator_view,
             equation.operator,
-            { item -> item is Item.Operator},
+            Item::isOperator,
             ::onEquationDropComplete
         )
     }
