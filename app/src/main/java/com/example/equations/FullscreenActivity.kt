@@ -147,19 +147,21 @@ class FullscreenActivity : AppCompatActivity() {
         val operator = (operator_view.tag as DragData?)?.item as Item.Operator?
         if (firstNumber != null && secondNumber != null && operator != null) {
             val result = operator.operate(firstNumber, secondNumber)
-            result_view.text = result.toString()
-            result_view.tag = DragData(
-                result,
-                {
-                    clearResult()
-                    clearEquation()
+            if (result != null) {
+                result_view.text = result.toString()
+                result_view.tag = DragData(
+                    result,
+                    {
+                        clearResult()
+                        clearEquation()
+                    }
+                )
+                themeTile(result_view)
+                result_view.setOnTouchListener(TileTouchListener())
+                result_view.setOnDragListener(null)
+                if (result.number == goal && adapter.items.none { item -> item?.isNecessary == true }) {
+                    win()
                 }
-            )
-            themeTile(result_view)
-            result_view.setOnTouchListener(TileTouchListener())
-            result_view.setOnDragListener(null)
-            if (result.number == goal && adapter.items.none { item -> item?.isNecessary == true }) {
-                win()
             }
         }
     }

@@ -15,13 +15,15 @@ sealed class Item {
     }
 
     sealed class Operator : Item() {
-        fun operate(number1: Number, number2: Number) = Number(
-            compute(number1.number, number2.number),
-            isNecessary || number1.isNecessary || number2.isNecessary,
-            Equation(number1, number2, this)
-        )
+        fun operate(number1: Number, number2: Number): Number? {
+            return Number(
+                compute(number1.number, number2.number) ?: return null,
+                isNecessary || number1.isNecessary || number2.isNecessary,
+                Equation(number1, number2, this)
+            )
+        }
 
-        protected abstract fun compute(number1: Int, number2: Int): Int
+        protected abstract fun compute(number1: Int, number2: Int): Int?
 
         class Plus(override val isNecessary: Boolean = false) : Operator() {
             override fun toString() = "+"
@@ -46,7 +48,8 @@ sealed class Item {
 
         class Mod(override val isNecessary: Boolean = false) : Operator() {
             override fun toString() = "//"
-            override fun compute(number1: Int, number2: Int) = number1 % number2
+            override fun compute(number1: Int, number2: Int) =
+                if (number2 == 0) null else number1 % number2
         }
     }
 }
