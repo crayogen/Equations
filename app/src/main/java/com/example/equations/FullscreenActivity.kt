@@ -48,16 +48,21 @@ class FullscreenActivity : AppCompatActivity() {
     }
 
     private fun generateGameData() {
-        goal = 6
+        goal = 30
         adapter = EquationsAdapter(arrayOf(
+            Item.Number(4),
+            Item.Number(5),
+            Item.Number(0),
             Item.Number(1),
-            Item.Number(2, isNecessary = true),
-            Item.Operator.Multiply(isNecessary = true),
-            Item.Number(7),
-            Item.Number(9),
+            Item.Operator.Mod(),
+            Item.Operator.Multiply(),
             Item.Operator.Plus(),
-            Item.Number(3, isNecessary = true),
-            Item.Number(6)
+            Item.Operator.Power(),
+            Item.Number(5, isNecessary = true),
+            Item.Number(6, isNecessary = true),
+            Item.Number(8, isNecessary = true),
+            Item.Operator.Multiply(isNecessary = true),
+            Item.Operator.Minus(isNecessary = true)
         ))
     }
 

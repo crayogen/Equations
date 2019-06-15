@@ -43,5 +43,10 @@ sealed class Item {
             override fun compute(number1: Int, number2: Int) =
                 Math.pow(number1.toDouble(), number2.toDouble()).toInt()
         }
+
+        class Mod(override val isNecessary: Boolean = false) : Operator() {
+            override fun toString() = "//"
+            override fun compute(number1: Int, number2: Int) = number1 % number2
+        }
     }
 }
