@@ -12,7 +12,7 @@ private const val BORDER_WIDTH_DIPS = 8
 private const val BORDER_COLOR_DEFAULT = Colors.GRAY
 private const val BORDER_COLOR_CALCULATED_NUMBER = Colors.BLUE
 private const val BACKGROUND_COLOR_DEFAULT = Colors.WHITE
-private const val BACKGROUND_COLOR_NECESSARY = Colors.PINK
+private const val BACKGROUND_COLOR_REQUIRED = Colors.PINK
 private const val BACKGROUND_COLOR_INVALID_RESULT = Colors.RED
 private const val TEXT_COLOR_DEFAULT = Colors.DARK_GRAY
 
@@ -21,7 +21,7 @@ fun themeTile(view: TextView) {
     view.background = createBackground(
         view.context,
         if ((item as? Item.Number)?.equation == null) BORDER_COLOR_DEFAULT else BORDER_COLOR_CALCULATED_NUMBER,
-        if (item == null || !item.isNecessary) BACKGROUND_COLOR_DEFAULT else BACKGROUND_COLOR_NECESSARY
+        if (item == null || !item.isRequired) BACKGROUND_COLOR_DEFAULT else BACKGROUND_COLOR_REQUIRED
     )
     val borderWidth = convertToDip(view.context, BORDER_WIDTH_DIPS)
     view.setPadding(borderWidth, borderWidth, borderWidth, borderWidth)

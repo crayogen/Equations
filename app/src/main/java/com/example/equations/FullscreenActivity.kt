@@ -57,11 +57,11 @@ class FullscreenActivity : AppCompatActivity() {
             Item.Operator.Multiply(),
             Item.Operator.Plus(),
             Item.Operator.Power(),
-            Item.Number(5, isNecessary = true),
-            Item.Number(6, isNecessary = true),
-            Item.Number(8, isNecessary = true),
-            Item.Operator.Multiply(isNecessary = true),
-            Item.Operator.Minus(isNecessary = true)
+            Item.Number(5, isRequired = true),
+            Item.Number(6, isRequired = true),
+            Item.Number(8, isRequired = true),
+            Item.Operator.Multiply(isRequired = true),
+            Item.Operator.Minus(isRequired = true)
         ))
     }
 
@@ -157,7 +157,7 @@ class FullscreenActivity : AppCompatActivity() {
                  * the one provided as the argument for the result view.
                  */
                 populateTile(result_view, result, ::isValidDragForResultView, onDropComplete = {})
-                if (result.number == goal && adapter.items.none { item -> item?.isNecessary == true }) {
+                if (result.number == goal && adapter.items.none { item -> item?.isRequired == true }) {
                     win()
                 }
             }

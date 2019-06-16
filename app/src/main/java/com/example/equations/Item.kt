@@ -1,14 +1,14 @@
 package com.example.equations
 
 sealed class Item {
-    abstract val isNecessary: Boolean
+    abstract val isRequired: Boolean
 
     fun isNumber() = this is Number
     fun isOperator() = this is Operator
 
     class Number(
         val number: Int,
-        override val isNecessary: Boolean = false,
+        override val isRequired: Boolean = false,
         val equation: Equation? = null
     ) : Item() {
         override fun toString() = number.toString()
@@ -18,35 +18,35 @@ sealed class Item {
         fun operate(number1: Number, number2: Number): Number? {
             return Number(
                 compute(number1.number, number2.number) ?: return null,
-                isNecessary || number1.isNecessary || number2.isNecessary,
+                isRequired || number1.isRequired || number2.isRequired,
                 Equation(number1, number2, this)
             )
         }
 
         protected abstract fun compute(number1: Int, number2: Int): Int?
 
-        class Plus(override val isNecessary: Boolean = false) : Operator() {
+        class Plus(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "+"
             override fun compute(number1: Int, number2: Int) = number1 + number2
         }
 
-        class Minus(override val isNecessary: Boolean = false) : Operator() {
+        class Minus(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "-"
             override fun compute(number1: Int, number2: Int) = number1 - number2
         }
 
-        class Multiply(override val isNecessary: Boolean = false) : Operator() {
+        class Multiply(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "x"
             override fun compute(number1: Int, number2: Int) = number1 * number2
         }
 
-        class Power(override val isNecessary: Boolean = false) : Operator() {
+        class Power(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "^"
             override fun compute(number1: Int, number2: Int) =
                 Math.pow(number1.toDouble(), number2.toDouble()).toInt()
         }
 
-        class Mod(override val isNecessary: Boolean = false) : Operator() {
+        class Mod(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "//"
             override fun compute(number1: Int, number2: Int) =
                 if (number2 == 0) null else number1 % number2
