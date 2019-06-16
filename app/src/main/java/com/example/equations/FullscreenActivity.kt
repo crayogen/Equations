@@ -122,7 +122,9 @@ class FullscreenActivity : AppCompatActivity() {
         view.tag = DragData(
             item,
             {
-                if (view != result_view) {
+                if (view == result_view) {
+                    clearEquation()
+                } else {
                     clearTextAndSetDragListener(view, isValid, onDropComplete)
                 }
                 clearResult()
@@ -147,17 +149,14 @@ class FullscreenActivity : AppCompatActivity() {
             if (result == null) {
                 themeInvalidResultTile(result_view)
             } else {
-                result_view.text = result.toString()
-                result_view.tag = DragData(
-                    result,
-                    {
-                        clearResult()
-                        clearEquation()
-                    }
-                )
-                themeTile(result_view)
-                result_view.setOnTouchListener(TileTouchListener())
-                result_view.setOnDragListener(null)
+                /* Don't send onResultDropComplete() because that would cause recursion when this is
+                 * called as a result of a populateTile() call from onResultDropComplete() itself.
+                 * Since equation is already populated at this point, we don't need that callback
+                 * immediately, and the clearTile callback that populateTile() sets in the DragData tag
+                 * has special logic for handling and setting the result view callback, and doesn't use
+                 * the one provided as the argument for the result view.
+                 */
+                populateTile(result_view, result, ::isValidDragForResultView, onDropComplete = {})
                 if (result.number == goal && adapter.items.none { item -> item?.isNecessary == true }) {
                     win()
                 }
@@ -165,26 +164,12 @@ class FullscreenActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("MoveLambdaOutsideParentheses")
     private fun onResultDropComplete(item: Item) {
         val equation = (item as Item.Number).equation!!
-        populateTile(
-            first_number_view,
-            equation.firstNumber,
-            Item::isNumber,
-            ::onEquationDropComplete
-        )
-        populateTile(
-            second_number_view,
-            equation.secondNumber,
-            Item::isNumber,
-            ::onEquationDropComplete
-        )
-        populateTile(
-            operator_view,
-            equation.operator,
-            Item::isOperator,
-            ::onEquationDropComplete
-        )
+        populateTile(first_number_view, equation.firstNumber, Item::isNumber, ::onEquationDropComplete)
+        populateTile(second_number_view, equation.secondNumber, Item::isNumber, ::onEquationDropComplete)
+        populateTile(operator_view, equation.operator, Item::isOperator, ::onEquationDropComplete)
     }
 
     private fun win() {
