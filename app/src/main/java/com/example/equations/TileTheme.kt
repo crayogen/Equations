@@ -23,6 +23,8 @@ fun themeTile(view: TextView) {
         if ((item as? Item.Number)?.equation == null) BORDER_COLOR_DEFAULT else BORDER_COLOR_CALCULATED_NUMBER,
         if (item == null || !item.isNecessary) BACKGROUND_COLOR_DEFAULT else BACKGROUND_COLOR_NECESSARY
     )
+    val borderWidth = convertToDip(view.context, BORDER_WIDTH_DIPS)
+    view.setPadding(borderWidth, borderWidth, borderWidth, borderWidth)
     view.setTextColor(TEXT_COLOR_DEFAULT)
 }
 
