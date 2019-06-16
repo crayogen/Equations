@@ -30,20 +30,20 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun replay() {
         generateGameData()
-        recycler_view.adapter = adapter
-        clearTextAndSetDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
-        clearTextAndSetDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
-        clearTextAndSetDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
-        clearResult()
-        themeTile(first_number_view)
-        themeTile(second_number_view)
-        themeTile(operator_view)
-        themeTile(result_view)
 
         goal_view.text = HtmlCompat.fromHtml(
             "Your goal is <font color=#00FF00>$goal</font>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
+
+        recycler_view.adapter = adapter
+
+        clearEquation()
+
+        themeTile(first_number_view)
+        themeTile(second_number_view)
+        themeTile(operator_view)
+        themeTile(result_view)
     }
 
     private fun generateGameData() {
@@ -89,14 +89,24 @@ class FullscreenActivity : AppCompatActivity() {
         setDragListener(view, isValid, onDropComplete)
     }
 
-    private fun clearResult() {
-        clearText(result_view)
-    }
-
     private fun clearEquation() {
         clearTextAndSetDragListener(first_number_view, Item::isNumber, ::onEquationDropComplete)
         clearTextAndSetDragListener(second_number_view, Item::isNumber, ::onEquationDropComplete)
         clearTextAndSetDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
+        clearText(result_view)
+    }
+
+    private fun clearTile(
+        view: TextView,
+        isValid: (Item) -> Boolean,
+        onDropComplete: (Item) -> Unit
+    ) {
+        if (view == result_view) {
+            clearEquation()
+        } else {
+            clearTextAndSetDragListener(view, isValid, onDropComplete)
+            clearText(result_view)
+        }
     }
 
     private fun setDragListener(
@@ -119,17 +129,7 @@ class FullscreenActivity : AppCompatActivity() {
         onDropComplete: (Item) -> Unit
     ) {
         view.text = item.toString()
-        view.tag = DragData(
-            item,
-            {
-                if (view == result_view) {
-                    clearEquation()
-                } else {
-                    clearTextAndSetDragListener(view, isValid, onDropComplete)
-                }
-                clearResult()
-            }
-        )
+        view.tag = DragData(item, { clearTile(view, isValid, onDropComplete) })
         themeTile(view)
         view.setOnTouchListener(TileTouchListener())
         view.setOnDragListener(null)
