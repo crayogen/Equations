@@ -147,7 +147,9 @@ class FullscreenActivity : AppCompatActivity() {
         val operator = (operator_view.tag as DragData?)?.item as Item.Operator?
         if (firstNumber != null && secondNumber != null && operator != null) {
             val result = operator.operate(firstNumber, secondNumber)
-            if (result != null) {
+            if (result == null) {
+                themeInvalidResultTile(result_view)
+            } else {
                 result_view.text = result.toString()
                 result_view.tag = DragData(
                     result,

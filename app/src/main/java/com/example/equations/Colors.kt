@@ -6,4 +6,5 @@ object Colors {
     const val BLUE = 0xFFA4C3E3.toInt()
     const val WHITE = 0xFFFFFFFF.toInt()
     const val DARK_GRAY = 0xFF444444.toInt()
+    const val RED = 0xFFFF0000.toInt()
 }
