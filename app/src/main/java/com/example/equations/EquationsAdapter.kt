@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 class EquationsAdapter(val items: Array<Item?>) : RecyclerView.Adapter<EquationsViewHolder>() {
     override fun getItemCount() = items.size
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EquationsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return EquationsViewHolder(inflater.inflate(R.layout.tile, parent, false))

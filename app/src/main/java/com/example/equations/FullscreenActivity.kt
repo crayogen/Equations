@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlin.properties.Delegates.notNull
 
 class FullscreenActivity : AppCompatActivity() {
-    var adapter: EquationsAdapter by notNull()
-    var goal: Int by notNull()
+    private var adapter: EquationsAdapter by notNull()
+    private var goal: Int by notNull()
 
-    @Suppress("MoveLambdaOutsideParentheses")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,7 +89,6 @@ class FullscreenActivity : AppCompatActivity() {
         setDragListener(view, isValid, onDropComplete)
     }
 
-    @Suppress("MoveLambdaOutsideParentheses")
     private fun clearResult() {
         clearText(result_view)
     }
@@ -101,7 +99,6 @@ class FullscreenActivity : AppCompatActivity() {
         clearTextAndSetDragListener(operator_view, Item::isOperator, ::onEquationDropComplete)
     }
 
-    @Suppress("MoveLambdaOutsideParentheses")
     private fun setDragListener(
         view: TextView,
         isValid: (Item) -> Boolean,
@@ -168,7 +165,6 @@ class FullscreenActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("NAME_SHADOWING")
     private fun onResultDropComplete(item: Item) {
         val equation = (item as Item.Number).equation!!
         populateTile(
