@@ -2,6 +2,7 @@ package com.example.equations
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -11,10 +12,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 import kotlin.properties.Delegates.notNull
 
+private const val KEY_GOAL = "goal"
+private const val KEY_RECYCLER_VIEW_ITEMS = "recycler_view_items"
+private const val KEY_EQUATION_FIRST_NUMBER = "equation_first_number"
+private const val KEY_EQUATION_SECOND_NUMBER = "equation_second_number"
+private const val KEY_EQUATION_OPERATOR = "equation_operator"
+
 class FullscreenActivity : AppCompatActivity() {
-    private var adapter: EquationsAdapter by notNull()
     private var goal: Int by notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,30 +32,69 @@ class FullscreenActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.HORIZONTAL))
         recycler_view.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
         recycler_view.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
-        replay()
+        clearEquation()
+        if (savedInstanceState == null) {
+            replay()
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        setupGoal(savedInstanceState.getInt(KEY_GOAL))
+        val adapterItemParcelables: Array<Parcelable?> =
+            savedInstanceState.getParcelableArray(KEY_RECYCLER_VIEW_ITEMS)!!
+        recycler_view.adapter = EquationsAdapter(
+            Arrays.copyOf(adapterItemParcelables, adapterItemParcelables.size, Array<Item?>::class.java)
+        )
+        val firstNumber = savedInstanceState.getParcelable(KEY_EQUATION_FIRST_NUMBER) as Item.Number?
+        val secondNumber = savedInstanceState.getParcelable(KEY_EQUATION_SECOND_NUMBER) as Item.Number?
+        val operator = savedInstanceState.getParcelable(KEY_EQUATION_OPERATOR) as Item.Operator?
+        if (firstNumber != null) {
+            populateTile(first_number_view, firstNumber, Item::isNumber, ::onEquationDropComplete)
+        }
+        if (secondNumber != null) {
+            populateTile(second_number_view, secondNumber, Item::isNumber, ::onEquationDropComplete)
+        }
+        if (operator != null) {
+            populateTile(operator_view, operator, Item::isOperator, ::onEquationDropComplete)
+        }
+        themeTiles()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_GOAL, goal)
+        outState.putParcelableArray(KEY_RECYCLER_VIEW_ITEMS, (recycler_view.adapter as EquationsAdapter).items)
+        outState.putParcelable(KEY_EQUATION_FIRST_NUMBER, (first_number_view.tag as DragData?)?.item)
+        outState.putParcelable(KEY_EQUATION_SECOND_NUMBER, (second_number_view.tag as DragData?)?.item)
+        outState.putParcelable(KEY_EQUATION_OPERATOR, (operator_view.tag as DragData?)?.item)
     }
 
     private fun replay() {
         generateGameData()
-
-        goal_view.text = HtmlCompat.fromHtml(
-            "Your goal is <font color=#00FF00>$goal</font>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
-
-        recycler_view.adapter = adapter
-
         clearEquation()
+        themeTiles()
+    }
 
+    private fun themeTiles() {
         themeTile(first_number_view)
         themeTile(second_number_view)
         themeTile(operator_view)
         themeTile(result_view)
     }
 
+    private fun setupGoal(goal: Int) {
+        this.goal = goal
+        goal_view.text = HtmlCompat.fromHtml(
+            "Your goal is <font color=#00FF00>$goal</font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+    }
+
     private fun generateGameData() {
-        goal = 30
-        adapter = EquationsAdapter(arrayOf(
+        setupGoal(30)
+        recycler_view.adapter = EquationsAdapter(arrayOf(
             Item.Number(4),
             Item.Number(5),
             Item.Number(0),
@@ -157,7 +203,9 @@ class FullscreenActivity : AppCompatActivity() {
                  * the one provided as the argument for the result view.
                  */
                 populateTile(result_view, result, ::isValidDragForResultView, onDropComplete = {})
-                if (result.number == goal && adapter.items.none { item -> item?.isRequired == true }) {
+                if (result.number == goal &&
+                    (recycler_view.adapter as EquationsAdapter).items.none { item -> item?.isRequired == true }
+                ) {
                     win()
                 }
             }
@@ -183,15 +231,11 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun makeFullScreen() {
         // Remove status and navigation bar
-
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
         root.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION    }
+            View.SYSTEM_UI_FLAG_FULLSCREEN or
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION    }
 }

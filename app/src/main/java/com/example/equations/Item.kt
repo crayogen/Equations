@@ -1,11 +1,15 @@
 package com.example.equations
 
-sealed class Item {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+sealed class Item : Parcelable {
     abstract val isRequired: Boolean
 
     fun isNumber() = this is Number
     fun isOperator() = this is Operator
 
+    @Parcelize
     class Number(
         val number: Int,
         override val isRequired: Boolean = false,
@@ -25,27 +29,32 @@ sealed class Item {
 
         protected abstract fun compute(number1: Int, number2: Int): Int?
 
+        @Parcelize
         class Plus(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "+"
             override fun compute(number1: Int, number2: Int) = number1 + number2
         }
 
+        @Parcelize
         class Minus(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "-"
             override fun compute(number1: Int, number2: Int) = number1 - number2
         }
 
+        @Parcelize
         class Multiply(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "x"
             override fun compute(number1: Int, number2: Int) = number1 * number2
         }
 
+        @Parcelize
         class Power(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "^"
             override fun compute(number1: Int, number2: Int) =
                 Math.pow(number1.toDouble(), number2.toDouble()).toInt()
         }
 
+        @Parcelize
         class Mod(override val isRequired: Boolean = false) : Operator() {
             override fun toString() = "//"
             override fun compute(number1: Int, number2: Int) =
