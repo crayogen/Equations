@@ -3,7 +3,7 @@ package com.example.equations
 import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.DragShadowBuilder
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 
 class TileTouchListener : View.OnTouchListener {
@@ -11,7 +11,13 @@ class TileTouchListener : View.OnTouchListener {
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         @Suppress("LiftReturnOrAssignment")
         if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-            ViewCompat.startDragAndDrop(view, null, DragShadowBuilder(view), view.tag as DragData, 0)
+            ViewCompat.startDragAndDrop(
+                view,
+                null,
+                TileDragShadowBuilder(view as TextView),
+                view.tag as DragData,
+                0
+            )
             return true
         } else {
             return false
