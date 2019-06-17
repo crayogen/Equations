@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.equations.databinding.ActivityFullscreenBinding
 import java.util.*
-import kotlin.properties.Delegates.notNull
 
 private const val KEY_GOAL = "goal"
 private const val KEY_RECYCLER_VIEW_ITEMS = "recycler_view_items"
@@ -24,8 +23,6 @@ private const val KEY_EQUATION_OPERATOR = "equation_operator"
 
 class FullscreenActivity : AppCompatActivity() {
     private lateinit var views: ActivityFullscreenBinding
-
-    private var goal: Int by notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +41,7 @@ class FullscreenActivity : AppCompatActivity() {
     @Suppress("UNCHECKED_CAST")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        setupGoal(savedInstanceState.getInt(KEY_GOAL))
+        views.resultView.hint = savedInstanceState.getInt(KEY_GOAL).toString()
         val adapterItemParcelables: Array<Parcelable?> =
             savedInstanceState.getParcelableArray(KEY_RECYCLER_VIEW_ITEMS)!!
         views.recyclerView.adapter = EquationsAdapter(
@@ -67,7 +64,7 @@ class FullscreenActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY_GOAL, goal)
+        outState.putInt(KEY_GOAL, views.resultView.hint.toString().toInt())
         outState.putParcelableArray(KEY_RECYCLER_VIEW_ITEMS, (views.recyclerView.adapter as EquationsAdapter).items)
         outState.putParcelable(KEY_EQUATION_FIRST_NUMBER, (views.firstNumberView.tag as DragData?)?.item)
         outState.putParcelable(KEY_EQUATION_SECOND_NUMBER, (views.secondNumberView.tag as DragData?)?.item)
@@ -87,16 +84,8 @@ class FullscreenActivity : AppCompatActivity() {
         themeTile(views.resultView)
     }
 
-    private fun setupGoal(goal: Int) {
-        this.goal = goal
-        views.goalView.text = HtmlCompat.fromHtml(
-            "Your goal is <font color=#00FF00>$goal</font>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
-    }
-
     private fun generateGameData() {
-        setupGoal(30)
+        views.resultView.hint = 30.toString()
         views.recyclerView.adapter = EquationsAdapter(arrayOf(
             Item.Number(4),
             Item.Number(5),
@@ -206,7 +195,7 @@ class FullscreenActivity : AppCompatActivity() {
                  * the one provided as the argument for the result view.
                  */
                 populateTile(views.resultView, result, ::isValidDragForResultView, onDropComplete = {})
-                if (result.number == goal &&
+                if (result.number == views.resultView.hint.toString().toInt() &&
                     (views.recyclerView.adapter as EquationsAdapter).items.none { item -> item?.isRequired == true }
                 ) {
                     win()

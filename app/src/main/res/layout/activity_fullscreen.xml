@@ -12,17 +12,6 @@
         android:background="@android:color/white"
         tools:context=".FullscreenActivity">
 
-        <TextView
-            android:id="@+id/goal_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40sp"
-            android:textColor="#888FF7"
-            android:textStyle="bold"
-            tools:text="The goal is 78" />
-
         <LinearLayout
             android:layout_marginTop="20dp"
             android:layout_marginLeft="4dp"
@@ -31,7 +20,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:showDividers="middle"
-            android:divider="@drawable/list_divider">
+            android:divider="@drawable/list_divider"
+            tools:ignore="MissingConstraints">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -40,20 +30,7 @@
 
                 <TextView
                     android:id="@+id/first_number_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,1:1"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:gravity="center"
-                    android:background="@android:color/black"
-                    android:textColor="@android:color/holo_red_dark"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="100sp"
-                    app:autoSizeStepGranularity="2sp" />
+                    style="@style/Widget.Tile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,20 +40,7 @@
 
                 <TextView
                     android:id="@+id/operator_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,1:1"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:gravity="center"
-                    android:background="@android:color/black"
-                    android:textColor="@android:color/holo_red_dark"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="100sp"
-                    app:autoSizeStepGranularity="2sp" />
+                    style="@style/Widget.Tile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,20 +50,7 @@
 
                 <TextView
                     android:id="@+id/second_number_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,1:1"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:gravity="center"
-                    android:background="@android:color/black"
-                    android:textColor="@android:color/holo_red_dark"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="100sp"
-                    app:autoSizeStepGranularity="2sp" />
+                    style="@style/Widget.Tile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -118,20 +69,7 @@
 
                 <TextView
                     android:id="@+id/result_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,1:1"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:gravity="center"
-                    android:background="@android:color/black"
-                    android:textColor="@android:color/holo_red_dark"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="100sp"
-                    app:autoSizeStepGranularity="2sp" />
+                    style="@style/Widget.Tile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

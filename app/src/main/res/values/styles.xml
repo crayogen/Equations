@@ -21,4 +21,19 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="Widget.Tile" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintDimensionRatio">H,1:1</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintLeft_toLeftOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="android:gravity">center</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">100sp</item>
+        <item name="autoSizeStepGranularity">2sp</item>
+        <item name="android:textColorHint">#ccc</item>
+    </style>
 </resources>
