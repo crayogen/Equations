@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.equations.databinding.TileBinding
 
 class EquationsAdapter(val items: Array<Item?>) : RecyclerView.Adapter<EquationsViewHolder>() {
     override fun getItemCount() = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EquationsViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return EquationsViewHolder(inflater.inflate(R.layout.tile, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        EquationsViewHolder(TileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     @Suppress("MoveLambdaOutsideParentheses", "NAME_SHADOWING", "RedundantLambdaArrow")
     @SuppressLint("ClickableViewAccessibility")

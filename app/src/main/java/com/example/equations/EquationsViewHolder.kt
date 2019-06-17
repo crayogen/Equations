@@ -1,9 +1,9 @@
 package com.example.equations
 
-import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.equations.databinding.TileBinding
 
-class EquationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val tileText: TextView = view.findViewById(R.id.tile_text)
+class EquationsViewHolder(binding: TileBinding) : RecyclerView.ViewHolder(binding.root) {
+    val tileText: TextView = binding.tileText
 }
